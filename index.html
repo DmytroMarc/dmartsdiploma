@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Furniture Catalog | Головна</title>
+    <title>Luminal | Головна</title>
 
     <script>
         if (localStorage.getItem('theme') === 'dark') {
@@ -16,7 +16,7 @@
 <body>
 
     <header>
-        <a href="index.html" class="logo">3D Furniture</a>
+        <a href="index.html" class="logo">Luminal</a>
 
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor">
@@ -35,19 +35,33 @@
     </header>
 
     <section class="hero">
-        <h1>Інтерактивний 3D-каталог меблів</h1>
-        <p>Налаштовуйте матеріали, кольори та роздивляйтесь меблі з усіх боків прямо у браузері.</p>
-        <a href="catalog.html" class="btn-primary">Перейти до каталогу</a>
+        <div class="hero-container">
+            
+            <div class="hero-model-card">
+                <div class="product-image-placeholder hero-placeholder">Прев'ю 3D моделі</div>
+                <a href="catalog.html" class="btn-primary" style="display: block; text-align: center; width: 100%;">Переглянути</a>
+            </div>
+
+            <div class="hero-text">
+                <h1>Luminal, інтерактивний каталог</h1>
+                <p>Налаштовуйте матеріали, кольори та роздивляйтесь меблі з усіх боків прямо у браузері.</p>
+                <a href="catalog.html" class="btn-primary">Перейти до каталогу</a>
+            </div>
+
+        </div>
     </section>
 
-    <section class="brands-section" id="brands">
+    <section class="brands-section" id="brands" style="margin-top: 80px;">
         <h2>Наші партнери</h2>
         <p>Компанії, чиї меблі представлені у нашому 3D-каталозі</p>
         
         <div class="brands-container">
-            <div class="brand-card">IKEA</div>
-            <div class="brand-card">JYSK</div>
-            <div class="brand-card">Ashley Furniture</div>
+            <a href="catalog.html" class="brand-card">IKEA</a>
+            <a href="catalog.html" class="brand-card">JYSK</a>
+            <a href="catalog.html" class="brand-card">Ashley Furniture</a>
+            <a href="catalog.html" class="brand-card">Herman Miller</a>
+            <a href="catalog.html" class="brand-card">BoConcept</a>
+            <a href="catalog.html" class="brand-card">Muji</a>
         </div>
     </section>
 
@@ -57,7 +71,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <h3>3D Furniture</h3>
+                <h3>Luminal</h3>
                 <p style="font-size: 0.9rem; margin-bottom: 10px;">Інноваційний каталог меблів з технологією WebGL. Обирайте меблі впевнено.</p>
             </div>
             <div class="footer-col">
@@ -72,7 +86,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2026 3D Furniture Diploma Project. Усі права захищено.
+            &copy; 2026 Luminal Diploma Project. Усі права захищено.
         </div>
     </footer>
 </body>

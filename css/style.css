@@ -176,16 +176,78 @@ nav a.active-link::after {
    4. ГОЛОВНА СТОРІНКА (Титулка)
    ========================================= */
 .hero {
-    text-align: center;
-    padding: 120px 20px;
+    padding: 80px 5%;
     background: var(--hero-bg);
     transition: background 0.3s ease;
+    display: flex;
+    justify-content: center;
 }
 
-.hero h1 {
-    font-size: 3rem;
+.hero-container {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+    max-width: 1200px;
+    width: 100%;
+}
+
+/* Картка моделі зліва */
+.hero-model-card {
+    flex: 1;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 30px var(--shadow-color);
+    max-width: 450px;
+    width: 100%;
+}
+
+.hero-placeholder {
+    height: 350px;
+    margin-bottom: 20px;
+}
+
+/* Текст справа */
+.hero-text {
+    flex: 1.2;
+    text-align: left;
+}
+
+.hero-text h1 {
+    font-size: 3.5rem;
     margin-bottom: 20px;
     color: var(--primary-color);
+    line-height: 1.2;
+}
+
+.hero-text p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    color: var(--text-muted);
+}
+
+/* Робимо картки брендів клікабельними (прибираємо підкреслення) */
+a.brand-card {
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Адаптивність для телефонів: текст буде зверху, модель під ним */
+@media (max-width: 768px) {
+    .hero-container {
+        flex-direction: column-reverse;
+        text-align: center;
+        gap: 40px;
+    }
+    .hero-text {
+        text-align: center;
+    }
+    .hero-text h1 {
+        font-size: 2.5rem;
+    }
+    .hero-model-card {
+        margin: 0 auto;
+    }
 }
 
 .btn-primary {
@@ -204,6 +266,27 @@ nav a.active-link::after {
 
 .btn-primary:hover {
     background-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+/* Кнопка "В обране" та інші другорядні дії */
+.btn-secondary {
+    display: inline-block;
+    background-color: transparent;
+    color: var(--primary-color);
+    padding: 12px 30px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: bold;
+    border: 2px solid var(--primary-color);
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: white;
     transform: translateY(-2px);
 }
 
@@ -334,6 +417,7 @@ button[type="submit"]:hover {
     align-items: center;
     justify-content: center;
 }
+
 .toggle-password:hover {
     opacity: 1;
 }
@@ -425,6 +509,7 @@ button[type="submit"]:hover {
 .item-details {
     flex: 1;
     min-width: 300px;
+    align-self: flex-start; /* ДОДАНО: Щоб текст не розтягувався по висоті 3D-моделі */
 }
 
 .item-details h1 {
@@ -878,9 +963,18 @@ footer {
 
 .profile-nav { display: flex; flex-direction: column; gap: 5px; }
 .profile-nav a {
-    padding: 12px 20px; border-radius: 8px; color: var(--text-color);
-    text-decoration: none; font-weight: 500; transition: all 0.2s;
-    display: flex; align-items: center; gap: 15px;
+    padding: 12px 20px; 
+    border-radius: 8px; 
+    color: var(--text-color);
+    text-decoration: none; 
+    font-weight: 500; 
+    transition: all 0.2s;
+    
+    /* Додаємо вирівнювання по правому краю */
+    display: flex; 
+    align-items: center; 
+    justify-content: flex-end; 
+    text-align: right;
 }
 
 .profile-nav a:hover, .profile-nav a.active { background: var(--bg-color); color: var(--primary-color); font-weight: 600; }

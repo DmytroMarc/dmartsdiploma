@@ -1,4 +1,4 @@
-// === МИТТЄВИЙ АНТИ-ФЛІКЕР КНОПОК (Ховає/показує кнопки до завантаження Firebase) ===
+// === МИТТЄВИЙ АНТИ-ФЛІКЕР КНОПОК ===
 if (localStorage.getItem('isAuth') === 'true') {
     document.documentElement.classList.add('is-logged-in');
 } else {
@@ -19,7 +19,20 @@ document.addEventListener("DOMContentLoaded", () => {
     simulate3DLoading();
     initForms();
     renderCheckoutPage();
-    initDynamicItem(); // ДОДАНО: Запуск динамічної сторінки товару
+    initDynamicItem(); 
+});
+
+// Слухач для синхронізації кошика між різними вкладками браузера (Кіллер-фіча)
+window.addEventListener('storage', (e) => {
+    if (e.key === 'cart') {
+        updateCartCounter();
+        if (window.location.pathname.includes('cart')) {
+            renderCartPage();
+        }
+        if (window.location.pathname.includes('checkout')) {
+            renderCheckoutPage();
+        }
+    }
 });
 
 // =========================================
@@ -33,19 +46,15 @@ function initThemeToggle() {
     const nav = document.querySelector('header nav');
     if (nav) nav.appendChild(toggleBtn);
 
-    // Готові SVG іконки від Google Material
     const iconSun = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M480-360q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Zm0 80q-83 0-141.5-58.5T280-480q0-83 58.5-141.5T480-680q83 0 141.5 58.5T680-480q0 83-58.5 141.5T480-280ZM200-440H40v-80h160v80Zm720 0H760v-80h160v80ZM440-760v-160h80v160h-80Zm0 720v-160h80v160h-80ZM256-650l-101-97 57-59 96 100-52 56Zm492 496-97-101 53-55 101 97-57 59Zm-98-550 97-101 59 57-100 96-56-52ZM154-212l101-97 55 53-97 101-59-57Z"/></svg>`;
-    
     const iconMoon = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z"/></svg>`;
 
-    // Встановлюємо правильну іконку при завантаженні
     if (document.documentElement.getAttribute('data-theme') === 'dark') {
         toggleBtn.innerHTML = iconSun;
     } else {
         toggleBtn.innerHTML = iconMoon;
     }
 
-    // Логіка кліку
     toggleBtn.addEventListener('click', () => {
         const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
         if (isDark) {
@@ -64,16 +73,17 @@ function initThemeToggle() {
 // 2. РОЗУМНА НАВІГАЦІЯ (Smart Nav)
 // =========================================
 function initSmartNav() {
-    let currentPath = window.location.pathname.split('/').pop();
+    let currentPath = window.location.pathname.toLowerCase();
     if (currentPath === '' || currentPath === '/') currentPath = 'index.html';
 
     const navLinks = document.querySelectorAll('header nav a');
     navLinks.forEach(link => {
         link.removeAttribute('style');
-        
         const linkHref = link.getAttribute('href');
-        // ФІКС: Додали перевірку, щоб це не була кнопка "Увійти"
-        if (linkHref === currentPath && !link.classList.contains('btn-login')) {
+        
+        // Фікс для Firebase: перевіряємо і з .html, і без нього
+        const baseHref = linkHref.replace('.html', '');
+        if ((currentPath.includes(linkHref) || currentPath.includes(baseHref)) && !link.classList.contains('btn-login') && baseHref !== '') {
             link.classList.add('active-link');
         }
     });
@@ -84,10 +94,7 @@ function initSmartNav() {
 // =========================================
 function initPasswordToggles() {
     const passInputs = document.querySelectorAll('input[type="password"]');
-    
-    // Готові SVG іконки від Google Material
     const iconEyeOpen = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/></svg>`;
-    
     const iconEyeClosed = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-144.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q146 0 266 81.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-224q-37 11-73 17.5T480-200q-146 0-266-81.5T40-500q21-53 58-103.5T176-701L56-822l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 144.5 160.5T480-280q26 0 51-3t49-10l-58-58q-14 5-28.5 7t-33.5 2q-75 0-127.5-52.5T280-522q0-16 2-33.5t7-28.5l-67-67Zm258 124Z"/></svg>`;
 
     passInputs.forEach(input => {
@@ -98,13 +105,13 @@ function initPasswordToggles() {
 
         const icon = document.createElement('span');
         icon.className = 'toggle-password';
-        icon.innerHTML = iconEyeOpen; // Показуємо відкрите око за замовчуванням
+        icon.innerHTML = iconEyeOpen; 
         wrapper.appendChild(icon);
 
         icon.addEventListener('click', () => {
             if (input.type === 'password') {
                 input.type = 'text';
-                icon.innerHTML = iconEyeClosed; // Пароль видно -> показуємо перекреслене око
+                icon.innerHTML = iconEyeClosed; 
             } else {
                 input.type = 'password';
                 icon.innerHTML = iconEyeOpen;
@@ -120,23 +127,25 @@ function initCartSystem() {
     updateCartCounter();
 
     const addToCartBtn = document.querySelector('.item-details .btn-primary');
-    if (addToCartBtn && window.location.pathname.includes('item.html')) {
-        addToCartBtn.removeAttribute('onclick');
+    // Фікс Firebase URL: замість 'item.html' просто 'item'
+    if (addToCartBtn && window.location.pathname.includes('item')) {
+        // Уникаємо подвійного навішування лісенерів
+        addToCartBtn.replaceWith(addToCartBtn.cloneNode(true));
+        const newAddToCartBtn = document.querySelector('.item-details .btn-primary');
         
-        addToCartBtn.addEventListener('click', () => {
+        newAddToCartBtn.addEventListener('click', () => {
             const activeColor = document.querySelector('.color-circle.active');
             const colorName = activeColor ? activeColor.getAttribute('title') : 'Стандартний';
             const colorHex = activeColor ? activeColor.style.backgroundColor : '#3b3554';
 
-            // Читаємо реальні дані зі сторінки товару
             const titleEl = document.querySelector('.item-details h1');
             const priceEl = document.querySelector('.item-details .price');
             
             const rawTitle = titleEl ? titleEl.innerText : 'Товар';
-            const rawPrice = priceEl ? parseInt(priceEl.innerText.replace(/\D/g, '')) : 0;
+            const rawPrice = priceEl ? parseInt(priceEl.innerText.replace(/\D/g, ''), 10) : 0;
 
             const item = {
-                id: 'item_' + rawTitle + '_' + colorName, // Унікальний ID за ім'ям і кольором
+                id: 'item_' + rawTitle.replace(/\s+/g, '_') + '_' + colorName.replace(/\s+/g, '_'),
                 name: rawTitle,
                 price: rawPrice,
                 color: colorName,
@@ -146,7 +155,6 @@ function initCartSystem() {
 
             let cart = JSON.parse(localStorage.getItem('cart')) || [];
             
-            // Шукаємо, чи є в кошику такий товар
             const existingItemIndex = cart.findIndex(i => i.id === item.id);
             if (existingItemIndex > -1) {
                 cart[existingItemIndex].quantity += 1;
@@ -160,19 +168,21 @@ function initCartSystem() {
         });
     }
 
-    if (window.location.pathname.includes('cart.html')) {
+    // Фікс Firebase URL: замість 'cart.html' просто 'cart'
+    if (window.location.pathname.includes('cart')) {
         renderCartPage();
     }
 }
 
 function updateCartCounter() {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    let totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    let totalItems = cart.reduce((sum, item) => sum + (parseInt(item.quantity) || 1), 0);
     
     const navLinks = document.querySelectorAll('header nav a');
     navLinks.forEach(link => {
         if (link.innerHTML.includes('Кошик')) {
-            link.innerHTML = `🛒 Кошик (${totalItems})`;
+            // Якщо 0 товарів - просто "Кошик", якщо більше - "Кошик (2)"
+            link.innerHTML = totalItems > 0 ? `🛒 Кошик (${totalItems})` : `🛒 Кошик`;
         }
     });
 }
@@ -195,7 +205,7 @@ function renderCartPage() {
     let totalPrice = 0;
 
     cart.forEach((item, index) => {
-        let qty = item.quantity || 1;
+        let qty = parseInt(item.quantity) || 1;
         let itemTotal = item.price * qty;
         totalPrice += itemTotal;
 
@@ -224,13 +234,16 @@ function renderCartPage() {
 
 window.changeQuantity = function(index, delta) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (!cart[index].quantity) cart[index].quantity = 1;
+    if (!cart[index]) return;
     
-    cart[index].quantity += delta;
+    let currentQty = parseInt(cart[index].quantity) || 1;
+    currentQty += delta;
 
-    if (cart[index].quantity <= 0) {
+    if (currentQty <= 0) {
         cart.splice(index, 1);
         window.showToast('Товар видалено з кошика');
+    } else {
+        cart[index].quantity = currentQty;
     }
 
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -268,7 +281,6 @@ function initCatalogFilters() {
 
     filterCheckboxes.forEach(box => {
         box.addEventListener('change', (e) => {
-            
             if (e.target.value === 'all' && e.target.checked) {
                 filterCheckboxes.forEach(cb => { if(cb !== e.target) cb.checked = false; });
             } else if (e.target.checked && filterAll) {
@@ -283,7 +295,6 @@ function initCatalogFilters() {
 
             products.forEach(card => {
                 const cardCat = card.getAttribute('data-category');
-                
                 if (activeCategories.length === 0 || (filterAll && filterAll.checked)) {
                     card.style.display = 'block';
                     visibleCount++;
@@ -307,30 +318,23 @@ function initCatalogFilters() {
 }
 
 // =========================================
-// 6. ІНШІ СТАРІ ФУНКЦІЇ (Форми, Кольори, Toasts)
+// 6. ІНШІ СТАРІ ФУНКЦІЇ ТА TOASTS
 // =========================================
 function initForms() {
-    // ФІКС: Залишили тільки профіль і чекаут. Логін і реєстрацію тепер обробляє Firebase!
-    const forms = ['profileForm', 'checkoutForm']; 
+    // Видаляємо 'profileForm' звідси, щоб не було конфлікту з Firebase
+    const forms = ['checkoutForm']; 
     forms.forEach(formId => {
         const form = document.getElementById(formId);
         if (form) {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                let msg = 'Успішно збережено!';
-                if (formId === 'checkoutForm') {
-                    msg = 'Замовлення оформлено! Дякуємо.';
-                    localStorage.removeItem('cart'); 
-                }
+                let msg = 'Замовлення оформлено! Дякуємо.';
+                localStorage.removeItem('cart'); 
                 window.showToast(msg);
-                if (formId !== 'profileForm') {
-                    setTimeout(() => window.location.href = formId === 'checkoutForm' ? 'index.html' : 'profile.html', 1500);
-                }
+                setTimeout(() => window.location.href = 'index.html', 1500);
             });
         }
     });
-
-    // Логіку кнопки виходу видалено звідси, оскільки вона тепер у firebase-auth.js
 }
 
 function initColorPicker() {
@@ -343,7 +347,6 @@ function initColorPicker() {
             colorCircles.forEach(c => c.classList.remove('active'));
             this.classList.add('active');
             const bgColor = this.style.backgroundColor;
-            window.showToast(`Колір змінено на: ${this.title}`);
             if (webglContainer) webglContainer.style.boxShadow = `inset 0 0 40px ${bgColor}`;
         });
     });
@@ -358,7 +361,7 @@ function simulate3DLoading() {
     }, 1500);
 }
 
-// ЗМІНЕНО: Тепер ця функція глобальна, щоб її бачив Firebase
+// ПЕРЕРОБЛЕНА ФУНКЦІЯ СПОВІЩЕНЬ: Без спаму і з правильними зникненнями
 window.showToast = function(message) { 
     let container = document.getElementById('toast-container');
     if (!container) {
@@ -366,11 +369,24 @@ window.showToast = function(message) {
         container.id = 'toast-container';
         document.body.appendChild(container);
     }
+
+    // Захист від "спаму": якщо більше 3 повідомлень, видаляємо найстаріше
+    if (container.children.length >= 3) {
+        container.firstChild.classList.remove('show');
+        setTimeout(() => {
+            if(container.firstChild) container.firstChild.remove();
+        }, 400);
+    }
+
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = message;
     container.appendChild(toast);
-    setTimeout(() => toast.classList.add('show'), 10);
+    
+    // Примусовий рендер для плавного виїзду
+    void toast.offsetWidth;
+    toast.classList.add('show');
+    
     setTimeout(() => {
         toast.classList.remove('show');
         setTimeout(() => toast.remove(), 400);
@@ -386,21 +402,32 @@ window.toggleFullScreen = function() {
     }
 }
 
-window.switchTab = function(tabName) {
-    const settingsBlock = document.getElementById('profileSettings');
-    const ordersBlock = document.getElementById('profileOrders');
-    if(settingsBlock) settingsBlock.style.display = 'none';
-    if(ordersBlock) ordersBlock.style.display = 'none';
-    const links = document.querySelectorAll('.profile-nav a');
+window.switchTab = function(event, tabName) {
+    if (event) event.preventDefault();
+    
+    // Отримуємо всі 4 блоки
+    const blocks = {
+        'settings': document.getElementById('profileSettings'),
+        'security': document.getElementById('profileSecurity'),
+        'orders': document.getElementById('profileOrders'),
+        'wishlist': document.getElementById('profileWishlist')
+    };
+    
+    // Ховаємо всі блоки
+    Object.values(blocks).forEach(block => {
+        if (block) block.style.display = 'none';
+    });
+    
+    // Забираємо клас active з усіх кнопок
+    const links = document.querySelectorAll('.profile-nav a:not(.danger)');
     links.forEach(link => link.classList.remove('active'));
 
-    if (tabName === 'settings') {
-        if(settingsBlock) settingsBlock.style.display = 'block';
-        if(links[0]) links[0].classList.add('active');
-    } else if (tabName === 'orders' || tabName === 'wishlist') {
-        if(ordersBlock) ordersBlock.style.display = 'block';
-        if (tabName === 'orders' && links[1]) links[1].classList.add('active');
-        if (tabName === 'wishlist' && links[2]) links[2].classList.add('active');
+    // Показуємо потрібний блок і підсвічуємо кнопку
+    if (blocks[tabName]) {
+        blocks[tabName].style.display = 'block';
+        if (event && event.currentTarget) {
+            event.currentTarget.classList.add('active');
+        }
     }
 }
 
@@ -413,10 +440,7 @@ function initMobileMenu() {
 
     if (mobileBtn && nav) {
         mobileBtn.addEventListener('click', () => {
-            // Додаємо або забираємо клас 'open'
             nav.classList.toggle('open');
-            
-            // Крута фішка: міняємо іконку бургера (☰) на хрестик (✕)
             if (nav.classList.contains('open')) {
                 mobileBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>`;
             } else {
@@ -431,7 +455,8 @@ function initMobileMenu() {
 // =========================================
 function renderCheckoutPage() {
     const checkoutSidebar = document.querySelector('.checkout-sidebar');
-    if (!checkoutSidebar || !window.location.pathname.includes('checkout.html')) return;
+    // Фікс Firebase URL: замість 'checkout.html' просто 'checkout'
+    if (!checkoutSidebar || !window.location.pathname.includes('checkout')) return;
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     let totalPrice = 0;
@@ -444,7 +469,7 @@ function renderCheckoutPage() {
     }
 
     cart.forEach(item => {
-        let qty = item.quantity || 1;
+        let qty = parseInt(item.quantity) || 1;
         let itemTotal = item.price * qty;
         totalPrice += itemTotal;
         
@@ -477,9 +502,9 @@ function renderCheckoutPage() {
 // 9. ДИНАМІЧНА СТОРІНКА ТОВАРУ (Міні-база)
 // =========================================
 function initDynamicItem() {
-    if (!window.location.pathname.includes('item.html')) return;
+    // Фікс Firebase URL: замість 'item.html' просто 'item'
+    if (!window.location.pathname.includes('item')) return;
 
-    // Наша база товарів
     const productsDB = {
         "sofa_oslo": { name: 'Диван "Осло"', price: 12500, desc: 'Сучасний мінімалістичний диван. Ідеально підходить для вітальні.' },
         "chair_loft": { name: 'Крісло "Лофт"', price: 4200, desc: 'Стильне крісло з металевим каркасом для вашого інтер\'єру.' },
@@ -487,7 +512,6 @@ function initDynamicItem() {
         "bed_hygge": { name: 'Ліжко "Х\'юге"', price: 15000, desc: 'Комфортне двоспальне ліжко для міцного сну.' }
     };
 
-    // Читаємо ID з URL (наприклад: item.html?id=chair_loft)
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
 

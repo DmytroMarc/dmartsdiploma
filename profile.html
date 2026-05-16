@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Особистий кабінет | 3D Furniture</title>
+    <title>Особистий кабінет | Luminal</title>
     <script>if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <header>
-        <a href="index.html" class="logo">3D Furniture</a>
+        <a href="index.html" class="logo">Luminal</a>
         <button class="mobile-menu-btn" id="mobileMenuBtn">
             <svg xmlns="http://www.w3.org/2000/svg" height="32" viewBox="0 -960 960 960" width="32" fill="currentColor">
                 <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/>
@@ -28,16 +28,20 @@
     <div class="profile-wrapper">
         <aside class="profile-sidebar">
             <div class="user-avatar-section">
-                <div class="avatar profile-avatar">...</div>
+                <div class="avatar profile-avatar" id="avatarPreview" style="background-size: cover; background-position: center; position: relative; overflow: hidden;">
+                    <span id="avatarInitials">...</span>
+                </div>
+                
                 <h3 class="profile-name-display">Завантаження...</h3>
-                <p class="profile-email-display">...</p>
+                <p class="profile-email-display" style="word-break: break-all;">...</p>
             </div>
             
             <nav class="profile-nav">
-                <a href="#" class="active" onclick="switchTab('settings')">⚙️ Налаштування профілю</a>
-                <a href="#" onclick="switchTab('orders')">📦 Мої замовлення</a>
-                <a href="#" onclick="switchTab('wishlist')">❤️ Збережені 3D-моделі</a>
-                <a href="#" id="logoutBtn" class="danger">🚪 Вийти з акаунту</a>
+                <a href="#" class="active" onclick="switchTab(event, 'settings')">Основні дані</a>
+                <a href="#" onclick="switchTab(event, 'security')">Безпека (Пошта/Пароль)</a>
+                <a href="#" onclick="switchTab(event, 'orders')">Мої замовлення</a>
+                <a href="#" onclick="switchTab(event, 'wishlist')">Збережені 3D-моделі</a>
+                <a href="#" id="logoutBtn" class="danger">Вийти з акаунту</a>
             </nav>
         </aside>
 
@@ -47,45 +51,58 @@
                 <div class="form-row" style="display: flex; gap: 20px;">
                     <div class="form-group" style="flex: 1;">
                         <label>Ім'я</label>
-                        <input type="text" id="prof-fname" required>
+                        <input type="text" id="prof-fname" required placeholder="Ваше ім'я">
                     </div>
                     <div class="form-group" style="flex: 1;">
                         <label>Прізвище</label>
-                        <input type="text" id="prof-lname" required>
+                        <input type="text" id="prof-lname" required placeholder="Ваше прізвище">
                     </div>
                 </div>
                 
+                <button type="submit" style="width: auto; padding: 12px 40px; margin-top: 10px;" class="btn-primary">Зберегти зміни</button>
+            </form>
+        </main>
+
+        <main class="profile-content" id="profileSecurity" style="display: none;">
+            <h2>Налаштування безпеки</h2>
+            
+            <form id="emailForm" style="margin-bottom: 40px;">
+                <h4 style="color: var(--text-color); margin-bottom: 15px;">Зміна E-mail</h4>
                 <div class="form-group">
-                    <label>E-mail</label>
-                    <input type="email" id="prof-email" required readonly style="opacity: 0.7;">
+                    <label>Нова адреса електронної пошти</label>
+                    <input type="email" id="prof-new-email" required>
                 </div>
-                
+                <button type="submit" style="width: auto; padding: 10px 30px;" class="btn-primary">Оновити E-mail</button>
+            </form>
+
+            <form id="passwordForm">
+                <h4 style="color: var(--text-color); margin-bottom: 15px;">Зміна пароля</h4>
                 <div class="form-group">
-                    <label>Номер телефону</label>
-                    <input type="tel" id="prof-phone" placeholder="+380991234567">
+                    <label>Новий пароль (мінімум 6 символів)</label>
+                    <input type="password" id="prof-new-pass" required>
                 </div>
-                
-                <button type="submit" style="width: auto; padding: 12px 40px; margin-top: 10px;">Зберегти зміни</button>
+                <button type="submit" style="width: auto; padding: 10px 30px;" class="btn-primary">Змінити пароль</button>
             </form>
         </main>
         
         <main class="profile-content" id="profileOrders" style="display: none;">
             <h2>Історія замовлень</h2>
-            <p style="color: #666; text-align: center; margin-top: 50px;">У вас поки немає оформлених замовлень.</p>
+            <p style="color: var(--text-muted); text-align: center; margin-top: 50px;">У вас поки немає оформлених замовлень.</p>
             <div style="text-align: center; margin-top: 20px;">
                 <a href="catalog.html" class="btn-primary">Перейти до каталогу</a>
             </div>
         </main>
-    </div>
 
-    <div id="toast-container"></div>
-    <script src="js/main.js"></script>
-    <script type="module" src="js/firebase-auth.js"></script>
+        <main class="profile-content" id="profileWishlist" style="display: none;">
+            <h2>Збережені 3D-моделі</h2>
+            <p style="color: var(--text-muted); text-align: center; margin-top: 50px;">Ви ще не додали жодної моделі в улюблені.</p>
+        </main>
+    </div>
 
     <footer>
         <div class="footer-content">
             <div class="footer-col">
-                <h3>3D Furniture</h3>
+                <h3>Luminal</h3>
                 <p style="font-size: 0.9rem; margin-bottom: 10px;">Інноваційний каталог меблів з технологією WebGL.</p>
             </div>
             <div class="footer-col">
@@ -100,8 +117,35 @@
             </div>
         </div>
         <div class="footer-bottom">
-            &copy; 2026 3D Furniture Diploma Project. Усі права захищено.
+            &copy; 2026 Luminal Diploma Project. Усі права захищено.
         </div>
     </footer>
+
+    <div id="toast-container"></div>
+    <script src="js/main.js"></script>
+    <script type="module" src="js/firebase-auth.js"></script>
+    
+    <script>
+        window.switchTab = function(event, tabName) {
+            if (event) event.preventDefault();
+            const blocks = {
+                'settings': document.getElementById('profileSettings'),
+                'security': document.getElementById('profileSecurity'),
+                'orders': document.getElementById('profileOrders'),
+                'wishlist': document.getElementById('profileWishlist')
+            };
+            Object.values(blocks).forEach(block => {
+                if (block) block.style.display = 'none';
+            });
+            const links = document.querySelectorAll('.profile-nav a:not(.danger)');
+            links.forEach(link => link.classList.remove('active'));
+            if (blocks[tabName]) {
+                blocks[tabName].style.display = 'block';
+                if (event && event.currentTarget) {
+                    event.currentTarget.classList.add('active');
+                }
+            }
+        }
+    </script>
 </body>
 </html>
