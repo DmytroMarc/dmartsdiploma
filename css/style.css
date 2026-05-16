@@ -307,27 +307,43 @@ a.brand-card {
 }
 
 .brands-container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Робимо рівно 4 колонки однакової ширини */
+    gap: 20px;
     max-width: 1000px;
     margin: 0 auto;
 }
 
-.brand-card {
+a.brand-card, .brand-card {
     background: var(--card-bg);
-    padding: 30px 50px;
+    padding: 30px 10px; /* Зменшили бокові відступи, щоб довгі назви точно влізли */
     border-radius: 12px;
     box-shadow: 0 4px 15px var(--shadow-color);
     font-weight: bold;
     color: var(--primary-color);
-    min-width: 200px;
+    text-align: center;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.3s, background-color 0.3s;
 }
 
 .brand-card:hover {
     transform: translateY(-5px);
+}
+
+/* Адаптивність: щоб на телефонах воно не злиплося в мікро-картки */
+@media (max-width: 800px) {
+    .brands-container {
+        grid-template-columns: repeat(2, 1fr); /* По 2 бренди в ряд на планшетах */
+    }
+}
+
+@media (max-width: 500px) {
+    .brands-container {
+        grid-template-columns: 1fr; /* По 1 бренду в ряд на телефонах */
+    }
 }
 
 /* =========================================

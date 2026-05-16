@@ -15,7 +15,6 @@ const notify = (msg) => {
     else alert(msg);
 };
 
-// --- ГЛОБАЛЬНІ ФУНКЦІЇ ДЛЯ КНОПОК ---
 window.addToCartGlobal = function(name, price, id) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     const item = { id: id + '_Стандартний', name: name, price: parseInt(price), color: 'Стандартний', colorHex: '#3b3554', quantity: 1 };
@@ -112,7 +111,7 @@ if (forgotPassLink) {
     });
 }
 
-// 3. SOCIAL LOGIN (Google / GitHub)
+// 3. SOCIAL LOGIN 
 const socialBtns = document.querySelectorAll('.btn-social');
 if(socialBtns.length > 0) {
     socialBtns[0].addEventListener('click', async (e) => {
@@ -168,7 +167,6 @@ onAuthStateChanged(auth, async (user) => {
         if (isCheckoutPage) {
             const checkForm = document.getElementById('checkoutForm');
             if (checkForm) {
-                // Використовуємо onsubmit, щоб перехопити повний контроль над формою
                 checkForm.onsubmit = async (e) => {
                     e.preventDefault();
                     const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -176,8 +174,6 @@ onAuthStateChanged(auth, async (user) => {
                     if (cart.length > 0) {
                         try {
                             notify("Оформлюємо замовлення...");
-                            
-                            // 1. Спочатку зберігаємо в БД
                             await setDoc(doc(db, "users", user.uid), {
                                 orders: arrayUnion({
                                     items: cart,
@@ -186,17 +182,14 @@ onAuthStateChanged(auth, async (user) => {
                                 })
                             }, { merge: true });
 
-                            // 2. Тільки після успішного збереження очищаємо кошик
                             localStorage.removeItem('cart');
                             window.dispatchEvent(new Event('storage')); 
                             
-                            // 3. Радуємо юзера і перекидаємо в профіль
                             notify("Замовлення успішно оформлено!");
                             setTimeout(() => window.location.href = "profile.html", 1500);
-
                         } catch(e) { 
-                            console.error("Помилка збереження історії замовлень", e); 
-                            notify("Сталася помилка при оформленні. Спробуйте ще раз.");
+                            console.error("Помилка", e); 
+                            notify("Сталася помилка при оформленні.");
                         }
                     } else {
                         notify("Ваш кошик порожній!");
@@ -303,31 +296,53 @@ onAuthStateChanged(auth, async (user) => {
                 };
             }
 
-            const emailForm = document.getElementById('emailForm');
-            if(emailForm) {
-                emailForm.onsubmit = async (e) => {
-                    e.preventDefault();
-                    const newEmail = document.getElementById('prof-new-email').value;
-                    try {
-                        await updateEmail(user, newEmail);
-                        await setDoc(doc(db, "users", user.uid), { email: newEmail }, { merge: true });
-                        document.querySelectorAll('.profile-email-display').forEach(el => el.innerText = newEmail);
-                        notify("E-mail успішно змінено!");
-                    } catch(err) { notify(translateAuthError(err)); }
-                };
-            }
+            // === ЛОГІКА ХОВАННЯ ФОРМ ДЛЯ СОЦМЕРЕЖ ===
+            const isSocial = user.providerData.some(provider => 
+                provider.providerId === 'google.com' || provider.providerId === 'github.com'
+            );
 
+            const emailForm = document.getElementById('emailForm');
             const passwordForm = document.getElementById('passwordForm');
-            if(passwordForm) {
-                passwordForm.onsubmit = async (e) => {
-                    e.preventDefault();
-                    const newPass = document.getElementById('prof-new-pass').value;
-                    try {
-                        await updatePassword(user, newPass);
-                        notify("Пароль успішно змінено!");
-                        document.getElementById('prof-new-pass').value = ''; 
-                    } catch(err) { notify(translateAuthError(err)); }
-                };
+            const securityTab = document.getElementById('profileSecurity');
+
+            if (isSocial) {
+                if (emailForm) emailForm.style.display = 'none';
+                if (passwordForm) passwordForm.style.display = 'none';
+                
+                if (securityTab && !document.getElementById('social-msg')) {
+                    const msg = document.createElement('p');
+                    msg.id = 'social-msg';
+                    msg.style.color = 'var(--text-muted)';
+                    msg.style.textAlign = 'center';
+                    msg.style.marginTop = '30px';
+                    msg.innerText = 'Ви авторизовані через соцмережу. Налаштування пошти та пароля керуються на стороні вашого провайдера.';
+                    securityTab.appendChild(msg);
+                }
+            } else {
+                if(emailForm) {
+                    emailForm.onsubmit = async (e) => {
+                        e.preventDefault();
+                        const newEmail = document.getElementById('prof-new-email').value;
+                        try {
+                            await updateEmail(user, newEmail);
+                            await setDoc(doc(db, "users", user.uid), { email: newEmail }, { merge: true });
+                            document.querySelectorAll('.profile-email-display').forEach(el => el.innerText = newEmail);
+                            notify("E-mail успішно змінено!");
+                        } catch(err) { notify(translateAuthError(err)); }
+                    };
+                }
+
+                if(passwordForm) {
+                    passwordForm.onsubmit = async (e) => {
+                        e.preventDefault();
+                        const newPass = document.getElementById('prof-new-pass').value;
+                        try {
+                            await updatePassword(user, newPass);
+                            notify("Пароль успішно змінено!");
+                            document.getElementById('prof-new-pass').value = ''; 
+                        } catch(err) { notify(translateAuthError(err)); }
+                    };
+                }
             }
         }
     } else {
