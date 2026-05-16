@@ -322,7 +322,7 @@ function initCatalogFilters() {
 // =========================================
 function initForms() {
     // Видаляємо 'profileForm' звідси, щоб не було конфлікту з Firebase
-    const forms = ['checkoutForm']; 
+    const forms = []; 
     forms.forEach(formId => {
         const form = document.getElementById(formId);
         if (form) {

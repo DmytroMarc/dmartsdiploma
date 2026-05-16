@@ -168,10 +168,16 @@ onAuthStateChanged(auth, async (user) => {
         if (isCheckoutPage) {
             const checkForm = document.getElementById('checkoutForm');
             if (checkForm) {
-                checkForm.addEventListener('submit', async () => {
+                // Використовуємо onsubmit, щоб перехопити повний контроль над формою
+                checkForm.onsubmit = async (e) => {
+                    e.preventDefault();
                     const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    
                     if (cart.length > 0) {
                         try {
+                            notify("Оформлюємо замовлення...");
+                            
+                            // 1. Спочатку зберігаємо в БД
                             await setDoc(doc(db, "users", user.uid), {
                                 orders: arrayUnion({
                                     items: cart,
@@ -179,9 +185,23 @@ onAuthStateChanged(auth, async (user) => {
                                     total: cart.reduce((s, i) => s + (i.price * i.quantity), 0)
                                 })
                             }, { merge: true });
-                        } catch(e) { console.error("Помилка збереження історії замовлень", e); }
+
+                            // 2. Тільки після успішного збереження очищаємо кошик
+                            localStorage.removeItem('cart');
+                            window.dispatchEvent(new Event('storage')); 
+                            
+                            // 3. Радуємо юзера і перекидаємо в профіль
+                            notify("Замовлення успішно оформлено!");
+                            setTimeout(() => window.location.href = "profile.html", 1500);
+
+                        } catch(e) { 
+                            console.error("Помилка збереження історії замовлень", e); 
+                            notify("Сталася помилка при оформленні. Спробуйте ще раз.");
+                        }
+                    } else {
+                        notify("Ваш кошик порожній!");
                     }
-                });
+                };
             }
         }
 
