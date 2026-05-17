@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог меблів | Luminal</title>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    
     <script>if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');</script>
+    
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+    
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -49,6 +55,26 @@
         <div class="catalog-content">
             <div class="catalog-grid" id="catalog-grid" style="margin-top: 0;">
                 
+                <div class="product-card" data-category="sofas">
+                    <model-viewer 
+                        src="models/sofa_set_01.glb" 
+                        alt="Софт-Лофт Комплект" 
+                        auto-rotate 
+                        camera-controls 
+                        bounds="tight"
+                        shadow-intensity="1" 
+                        exposure="1"
+                        style="width: 100%; height: 200px; background-color: var(--model-bg); outline: none; border-radius: 8px; margin-bottom: 15px;">
+                    </model-viewer>
+                    <h3>Софт-Лофт Комплект</h3>
+                    <div class="price">45 000 ₴</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                        <a href="item.html?id=soft-loft-set" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
+                        <button onclick="addToCartGlobal('Софт-Лофт Комплект', 45000, 'soft-loft-set')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
+                        <button onclick="toggleWishlist('soft-loft-set', 'Софт-Лофт Комплект', 45000)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
+                    </div>
+                </div>
+
                 <div class="product-card" data-category="sofas">
                     <div class="product-image-placeholder">Прев'ю 3D</div>
                     <h3>Диван "Осло"</h3>

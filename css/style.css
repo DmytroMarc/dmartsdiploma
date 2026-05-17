@@ -1111,3 +1111,67 @@ html.is-logged-in #mainNav .btn-profile {
 html.is-logged-out #mainNav .btn-login {
     display: inline-block !important;
 }
+
+/* =========================================
+   14. ПІДКАЗКИ КЕРУВАННЯ 3D МОДЕЛЛЮ
+   ========================================= */
+.model-hints {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(0, 0, 0, 0.6); /* Напівпрозорий темний фон */
+    backdrop-filter: blur(5px); /* Ефект розмиття як в Apple */
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+    pointer-events: none; /* ВАЖЛИВО: дозволяє "проклікувати" крізь панель, щоб вона не блокувала обертання моделі */
+}
+
+.model-hints div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+}
+
+/* Адаптивність для телефонів */
+@media (max-width: 600px) {
+    .model-hints {
+        font-size: 0.8rem;
+        padding: 10px;
+        top: 10px;
+        left: 10px;
+    }
+}
+
+/* =========================================
+   15. КОЛІР ФОНУ ДЛЯ 3D-МОДЕЛІ
+   ========================================= */
+:root {
+    --model-bg: #dbd5e6; /* Приємний ніжно-бузковий для світлої теми */
+}
+
+[data-theme="dark"] {
+    --model-bg: var(--card-bg); /* Темний фон для темної теми */
+}
+
+/* Примусово задаємо фон контейнеру */
+#model-container {
+    background-color: var(--model-bg) !important;
+    transition: background-color 0.3s ease;
+}
+
+/* На повному екрані зберігаємо фон і ховаємо рамки */
+#model-container:fullscreen,
+#model-container:-webkit-full-screen,
+#model-container:-moz-full-screen,
+#model-container:-ms-fullscreen {
+    background-color: var(--model-bg) !important;
+    border: none !important;
+    border-radius: 0 !important;
+}

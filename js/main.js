@@ -393,14 +393,28 @@ window.showToast = function(message) {
     }, 3000);
 }
 
-window.toggleFullScreen = function() {
-    const viewer = document.querySelector('.viewer-wrapper');
+// НОВА ФУНКЦІЯ ПОВНОГО ЕКРАНУ
+window.openFullscreen = function() {
+    // Шукаємо весь контейнер, а не тільки плеєр
+    const container = document.getElementById('model-container');
+    if (!container) return;
+
     if (!document.fullscreenElement) {
-        viewer.requestFullscreen().catch(err => window.showToast(`Помилка екрану: ${err.message}`));
+        // Розгортаємо
+        if (container.requestFullscreen) {
+            container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) { /* Для Safari */
+            container.webkitRequestFullscreen();
+        } else if (container.msRequestFullscreen) { /* Для старих браузерів */
+            container.msRequestFullscreen();
+        }
     } else {
-        document.exitFullscreen();
+        // Згортаємо, якщо вже на повному екрані
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
     }
-}
+};
 
 window.switchTab = function(event, tabName) {
     if (event) event.preventDefault();
@@ -502,14 +516,21 @@ function renderCheckoutPage() {
 // 9. ДИНАМІЧНА СТОРІНКА ТОВАРУ (Міні-база)
 // =========================================
 function initDynamicItem() {
-    // Фікс Firebase URL: замість 'item.html' просто 'item'
     if (!window.location.pathname.includes('item')) return;
 
     const productsDB = {
         "sofa_oslo": { name: 'Диван "Осло"', price: 12500, desc: 'Сучасний мінімалістичний диван. Ідеально підходить для вітальні.' },
         "chair_loft": { name: 'Крісло "Лофт"', price: 4200, desc: 'Стильне крісло з металевим каркасом для вашого інтер\'єру.' },
         "table_scandi": { name: 'Стіл "Сканді"', price: 6800, desc: 'Дерев\'яний стіл у скандинавському стилі. Надійний та красивий.' },
-        "bed_hygge": { name: 'Ліжко "Х\'юге"', price: 15000, desc: 'Комфортне двоспальне ліжко для міцного сну.' }
+        "bed_hygge": { name: 'Ліжко "Х\'юге"', price: 15000, desc: 'Комфортне двоспальне ліжко для міцного сну.' },
+        
+        // ОСЬ ТУТ ПРОПИСАНО ШЛЯХ ДО ТВОЄЇ МОДЕЛІ:
+        "soft-loft-set": { 
+            name: 'Софт-Лофт Комплект', 
+            price: 45000, 
+            desc: 'Ексклюзивний набір меблів у стилі лофт: великий кутовий диван, крісло та дизайнерський столик.',
+            modelPath: 'models/sofa_set_01.glb' 
+        }
     };
 
     const params = new URLSearchParams(window.location.search);
@@ -517,9 +538,52 @@ function initDynamicItem() {
 
     if (id && productsDB[id]) {
         const product = productsDB[id];
+        
+        // Заповнюємо текстові дані
         document.querySelector('.item-details h1').innerText = product.name;
         document.querySelector('.item-details .price').innerText = product.price.toLocaleString() + ' ₴';
         document.querySelector('.item-details p').innerText = product.desc;
         document.querySelector('.breadcrumbs').innerHTML = `<a href="index.html">Головна</a> / <a href="catalog.html">Каталог</a> / ${product.name}`;
+
+        // МАГІЯ WEBGL: Шукаємо місце для картинки і вставляємо туди 3D-модель
+        const imagePlaceholder = document.querySelector('.product-image-placeholder') || document.querySelector('.viewer-wrapper');
+        
+        if (imagePlaceholder && product.modelPath) {
+            imagePlaceholder.style.position = 'relative';
+            imagePlaceholder.id = 'model-container'; 
+            
+            // МАГІЯ ТУТ: Вішаємо рамку і стилі на сам контейнер, а не на плеєр!
+            imagePlaceholder.style.border = '2px solid var(--border-color)';
+            imagePlaceholder.style.borderRadius = '12px';
+            imagePlaceholder.style.overflow = 'hidden';
+            imagePlaceholder.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
+            
+            imagePlaceholder.innerHTML = `
+                <model-viewer 
+                    id="fullscreen-viewer"
+                    src="${product.modelPath}" 
+                    alt="${product.name}" 
+                    auto-rotate 
+                    camera-controls 
+                    bounds="tight" 
+                    shadow-intensity="1.2" 
+                    exposure="1"
+                    /* Плеєр тепер повністю прозорий і без рамок */
+                    style="width: 100%; height: 100%; min-height: 600px; background-color: transparent; outline: none; border: none;">
+                </model-viewer>
+                
+                <div class="model-hints" style="pointer-events: none;">
+                    <div><span>🖱️</span> Ліва кнопка: Обертати</div>
+                    <div><span>🖱️</span> Права кнопка: Панорамувати (Рухати)</div>
+                    <div><span>⚙️</span> Коліщатко: Наближати</div>
+                </div>
+
+                <div style="position: absolute; bottom: 20px; right: 20px; z-index: 10;">
+                    <button onclick="openFullscreen()" style="padding: 10px 15px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-family: inherit; backdrop-filter: blur(5px);">
+                        ⛶ На весь екран
+                    </button>
+                </div>
+            `;
+        }
     }
 }

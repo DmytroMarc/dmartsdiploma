@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luminal | Головна</title>
 
+    <link rel="icon" type="image/png" href="favicon.png">
+
     <script>
         if (localStorage.getItem('theme') === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
         }
     </script>
+
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
 
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -26,7 +30,7 @@
         
         <nav id="mainNav">
             <a href="index.html">Головна</a>
-            <a href="catalog.html">Каталог 3D меблів</a>
+            <a href="catalog.html">Каталог</a>
             <a href="#brands">Бренди</a>
             <a href="cart.html">🛒 Кошик (0)</a>
             <a href="login.html" class="btn-login" style="display: none;">Увійти</a>
@@ -38,8 +42,17 @@
         <div class="hero-container">
             
             <div class="hero-model-card">
-                <div class="product-image-placeholder hero-placeholder">Прев'ю 3D моделі</div>
-                <a href="catalog.html" class="btn-primary" style="display: block; text-align: center; width: 100%;">Переглянути</a>
+                <model-viewer 
+                    src="models/sofa_set_01.glb" 
+                    alt="Софт-Лофт Комплект" 
+                    auto-rotate 
+                    camera-controls 
+                    shadow-intensity="1" 
+                    exposure="1"
+                    style="width: 100%; height: 350px; background-color: var(--hero-bg); outline: none; border: 2px solid var(--border-color); border-radius: 12px; box-shadow: inset 0 0 20px rgba(0,0,0,0.05); margin-bottom: 20px;">
+                </model-viewer>
+                
+                <a href="item.html?id=soft-loft-set" class="btn-primary" style="display: block; text-align: center; width: 100%;">Переглянути деталі</a>
             </div>
 
             <div class="hero-text">
