@@ -519,17 +519,47 @@ function initDynamicItem() {
     if (!window.location.pathname.includes('item')) return;
 
     const productsDB = {
-        "sofa_oslo": { name: 'Диван "Осло"', price: 12500, desc: 'Сучасний мінімалістичний диван. Ідеально підходить для вітальні.' },
-        "chair_loft": { name: 'Крісло "Лофт"', price: 4200, desc: 'Стильне крісло з металевим каркасом для вашого інтер\'єру.' },
-        "table_scandi": { name: 'Стіл "Сканді"', price: 6800, desc: 'Дерев\'яний стіл у скандинавському стилі. Надійний та красивий.' },
-        "bed_hygge": { name: 'Ліжко "Х\'юге"', price: 15000, desc: 'Комфортне двоспальне ліжко для міцного сну.' },
-        
-        // ОСЬ ТУТ ПРОПИСАНО ШЛЯХ ДО ТВОЄЇ МОДЕЛІ:
-        "soft-loft-set": { 
-            name: 'Софт-Лофт Комплект', 
-            price: 45000, 
-            desc: 'Ексклюзивний набір меблів у стилі лофт: великий кутовий диван, крісло та дизайнерський столик.',
-            modelPath: 'models/sofa_set_01.glb' 
+       'soft-loft-set': {
+            name: 'Софт-Лофт Комплект',
+            price: 45000,
+            modelPath: 'models/sofa_set_01.glb',
+            description: 'Ексклюзивний набір меблів у стилі лофт: великий кутовий диван, крісло та дизайнерський столик. Ідеальне рішення для просторої вітальні.'
+        },
+        'bed_next': {
+            name: 'Ліжко "Некст"',
+            price: 18500,
+            modelPath: 'models/bed.glb',
+            description: 'Сучасне та мінімалістичне ліжко, яке ідеально впишеться у будь-який інтер\'єр. Високоякісна тканина та ергономічна спинка гарантують максимальний комфорт після важкого дня.'
+        },
+        'bed_mc': {
+            name: 'Ліжко "Майнкрафт"',
+            price: 6400,
+            modelPath: 'models/bed_minecraft.glb',
+            description: 'Легендарне квадратне ліжко прямісінько з кубічного світу! Забезпечує 100% захист від фантомів, якщо поспати на ньому вночі. Ідеальний вибір для справжніх геймерів (але трохи жорсткуватий).'
+        },
+        'chair_lounge': {
+            name: 'Крісло "Релакс"',
+            price: 8200,
+            modelPath: 'models/lounge_chair.glb',
+            description: 'Неймовірно м\'яке лаунж-крісло для вашої зони відпочинку. Плавні лінії, глибока посадка та приємна на дотик текстура роблять його ідеальним місцем для читання книг чи ранкової кави.'
+        },
+        'chair_gaming': {
+            name: 'Крісло "Кібер"',
+            price: 11500,
+            modelPath: 'models/gaming_chair.glb',
+            description: 'Професійне геймерське крісло з підтримкою попереку та шиї. Регульована спинка дозволить вам проводити за комп\'ютером години без найменшої втоми.'
+        },
+        'table_folding': {
+            name: 'Стіл "Орігамі"',
+            price: 5400,
+            modelPath: 'models/folding_table.glb',
+            description: 'Практичний розкладний стіл у сучасному стилі. Компактний у складеному вигляді, він легко перетворюється на повноцінне робоче або обіднє місце, заощаджуючи простір у кімнаті.'
+        },
+        'table_billiard': {
+            name: 'Більярд "Профі"',
+            price: 32000,
+            modelPath: 'models/billiard-table.glb',
+            description: 'Елітний більярдний стіл класичного дизайну. Сукно преміум-якості та масивні ніжки створять атмосферу справжнього джентльменського клубу у вашому домі.'
         }
     };
 
@@ -539,10 +569,10 @@ function initDynamicItem() {
     if (id && productsDB[id]) {
         const product = productsDB[id];
         
-        // Заповнюємо текстові дані
+        // Заповнюємо текстові дані (ТУТ БУЛА ПОМИЛКА: desc -> description)
         document.querySelector('.item-details h1').innerText = product.name;
         document.querySelector('.item-details .price').innerText = product.price.toLocaleString() + ' ₴';
-        document.querySelector('.item-details p').innerText = product.desc;
+        document.querySelector('.item-details p').innerText = product.description; 
         document.querySelector('.breadcrumbs').innerHTML = `<a href="index.html">Головна</a> / <a href="catalog.html">Каталог</a> / ${product.name}`;
 
         // МАГІЯ WEBGL: Шукаємо місце для картинки і вставляємо туди 3D-модель
@@ -552,7 +582,6 @@ function initDynamicItem() {
             imagePlaceholder.style.position = 'relative';
             imagePlaceholder.id = 'model-container'; 
             
-            // МАГІЯ ТУТ: Вішаємо рамку і стилі на сам контейнер, а не на плеєр!
             imagePlaceholder.style.border = '2px solid var(--border-color)';
             imagePlaceholder.style.borderRadius = '12px';
             imagePlaceholder.style.overflow = 'hidden';
@@ -568,7 +597,6 @@ function initDynamicItem() {
                     bounds="tight" 
                     shadow-intensity="1.2" 
                     exposure="1"
-                    /* Плеєр тепер повністю прозорий і без рамок */
                     style="width: 100%; height: 100%; min-height: 600px; background-color: transparent; outline: none; border: none;">
                 </model-viewer>
                 

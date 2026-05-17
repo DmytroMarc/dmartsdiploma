@@ -39,9 +39,9 @@
                 <h4>Категорії</h4>
                 <label class="filter-label"><input type="checkbox" class="cat-filter" value="all" checked> Всі меблі</label>
                 <label class="filter-label"><input type="checkbox" class="cat-filter" value="sofas"> Дивани</label>
+                <label class="filter-label"><input type="checkbox" class="cat-filter" value="beds"> Ліжка</label>
                 <label class="filter-label"><input type="checkbox" class="cat-filter" value="chairs"> Крісла</label>
                 <label class="filter-label"><input type="checkbox" class="cat-filter" value="tables"> Столи</label>
-                <label class="filter-label"><input type="checkbox" class="cat-filter" value="beds"> Ліжка</label>
             </div>
             <div class="filter-group">
                 <h4>Ціна, ₴</h4>
@@ -56,16 +56,7 @@
             <div class="catalog-grid" id="catalog-grid" style="margin-top: 0;">
                 
                 <div class="product-card" data-category="sofas">
-                    <model-viewer 
-                        src="models/sofa_set_01.glb" 
-                        alt="Софт-Лофт Комплект" 
-                        auto-rotate 
-                        camera-controls 
-                        bounds="tight"
-                        shadow-intensity="1" 
-                        exposure="1"
-                        style="width: 100%; height: 200px; background-color: var(--model-bg); outline: none; border-radius: 8px; margin-bottom: 15px;">
-                    </model-viewer>
+                    <model-viewer src="models/sofa_set_01.glb" alt="Софт-Лофт Комплект" auto-rotate camera-controls bounds="tight" shadow-intensity="1" exposure="1" style="width: 100%; height: 200px; background-color: var(--model-bg); outline: none; border-radius: 8px; margin-bottom: 15px;"></model-viewer>
                     <h3>Софт-Лофт Комплект</h3>
                     <div class="price">45 000 ₴</div>
                     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
@@ -75,47 +66,69 @@
                     </div>
                 </div>
 
-                <div class="product-card" data-category="sofas">
-                    <div class="product-image-placeholder">Прев'ю 3D</div>
-                    <h3>Диван "Осло"</h3>
-                    <div class="price">12 500 ₴</div>
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
-                        <a href="item.html?id=sofa_oslo" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
-                        <button onclick="addToCartGlobal('Диван Осло', 12500, 'sofa_oslo')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
-                        <button onclick="toggleWishlist('sofa_oslo', 'Диван Осло', 12500)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
-                    </div>
-                </div>
-                
-                <div class="product-card" data-category="chairs">
-                    <div class="product-image-placeholder">Прев'ю 3D</div>
-                    <h3>Крісло "Лофт"</h3>
-                    <div class="price">4 200 ₴</div>
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
-                        <a href="item.html?id=chair_loft" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
-                        <button onclick="addToCartGlobal('Крісло Лофт', 4200, 'chair_loft')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
-                        <button onclick="toggleWishlist('chair_loft', 'Крісло Лофт', 4200)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
-                    </div>
-                </div>
-                
-                <div class="product-card" data-category="tables">
-                    <div class="product-image-placeholder">Прев'ю 3D</div>
-                    <h3>Стіл "Сканді"</h3>
-                    <div class="price">6 800 ₴</div>
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
-                        <a href="item.html?id=table_scandi" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
-                        <button onclick="addToCartGlobal('Стіл Сканді', 6800, 'table_scandi')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
-                        <button onclick="toggleWishlist('table_scandi', 'Стіл Сканді', 6800)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
-                    </div>
-                </div>
-                
                 <div class="product-card" data-category="beds">
-                    <div class="product-image-placeholder">Прев'ю 3D</div>
-                    <h3>Ліжко "Х'юге"</h3>
-                    <div class="price">15 000 ₴</div>
+                    <model-viewer src="models/bed.glb" alt="Ліжко Некст" auto-rotate camera-controls bounds="tight" shadow-intensity="1" exposure="1" style="width: 100%; height: 200px; background-color: var(--model-bg); outline: none; border-radius: 8px; margin-bottom: 15px;"></model-viewer>
+                    <h3>Ліжко "Некст"</h3>
+                    <div class="price">18 500 ₴</div>
                     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
-                        <a href="item.html?id=bed_hygge" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
-                        <button onclick="addToCartGlobal('Ліжко Х\'юге', 15000, 'bed_hygge')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
-                        <button onclick="toggleWishlist('bed_hygge', 'Ліжко Х\'юге', 15000)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
+                        <a href="item.html?id=bed_next" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
+                        <button onclick="addToCartGlobal('Ліжко Некст', 18500, 'bed_next')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
+                        <button onclick="toggleWishlist('bed_next', 'Ліжко Некст', 18500)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="beds">
+                    <model-viewer src="models/bed_minecraft.glb" alt="Ліжко Кубічне" auto-rotate camera-controls bounds="tight" shadow-intensity="1" exposure="1" style="width: 100%; height: 200px; background-color: var(--model-bg); outline: none; border-radius: 8px; margin-bottom: 15px;"></model-viewer>
+                    <h3>Ліжко "Майнкрафт"</h3>
+                    <div class="price">6 400 ₴</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                        <a href="item.html?id=bed_mc" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
+                        <button onclick="addToCartGlobal('Ліжко Майнкрафт', 6400, 'bed_mc')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
+                        <button onclick="toggleWishlist('bed_mc', 'Ліжко Майнкрафт', 6400)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="chairs">
+                    <model-viewer src="models/lounge_chair.glb" alt="Крісло Релакс" auto-rotate camera-controls bounds="tight" shadow-intensity="1" exposure="1" style="width: 100%; height: 200px; background-color: var(--model-bg); outline: none; border-radius: 8px; margin-bottom: 15px;"></model-viewer>
+                    <h3>Крісло "Релакс"</h3>
+                    <div class="price">8 200 ₴</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                        <a href="item.html?id=chair_lounge" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
+                        <button onclick="addToCartGlobal('Крісло Релакс', 8200, 'chair_lounge')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
+                        <button onclick="toggleWishlist('chair_lounge', 'Крісло Релакс', 8200)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="chairs">
+                    <model-viewer src="models/gaming_chair.glb" alt="Геймерське крісло" auto-rotate camera-controls bounds="tight" shadow-intensity="1" exposure="1" style="width: 100%; height: 200px; background-color: var(--model-bg); outline: none; border-radius: 8px; margin-bottom: 15px;"></model-viewer>
+                    <h3>Крісло "Кібер"</h3>
+                    <div class="price">11 500 ₴</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                        <a href="item.html?id=chair_gaming" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
+                        <button onclick="addToCartGlobal('Крісло Кібер', 11500, 'chair_gaming')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
+                        <button onclick="toggleWishlist('chair_gaming', 'Крісло Кібер', 11500)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="tables">
+                    <model-viewer src="models/folding_table.glb" alt="Стіл Орігамі" auto-rotate camera-controls bounds="tight" shadow-intensity="1" exposure="1" style="width: 100%; height: 200px; background-color: var(--model-bg); outline: none; border-radius: 8px; margin-bottom: 15px;"></model-viewer>
+                    <h3>Стіл "Орігамі"</h3>
+                    <div class="price">5 400 ₴</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                        <a href="item.html?id=table_folding" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
+                        <button onclick="addToCartGlobal('Стіл Орігамі', 5400, 'table_folding')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
+                        <button onclick="toggleWishlist('table_folding', 'Стіл Орігамі', 5400)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
+                    </div>
+                </div>
+
+                <div class="product-card" data-category="tables">
+                    <model-viewer src="models/billiard-table.glb" alt="Більярдний стіл" auto-rotate camera-controls bounds="tight" shadow-intensity="1" exposure="1" style="width: 100%; height: 200px; background-color: var(--model-bg); outline: none; border-radius: 8px; margin-bottom: 15px;"></model-viewer>
+                    <h3>Більярд "Профі"</h3>
+                    <div class="price">32 000 ₴</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                        <a href="item.html?id=table_billiard" class="btn-primary" style="padding: 8px; font-size: 0.9rem; text-align: center;">Переглянути</a>
+                        <button onclick="addToCartGlobal('Більярд Профі', 32000, 'table_billiard')" class="btn-primary" style="padding: 8px; font-size: 0.9rem;">Додати в кошик</button>
+                        <button onclick="toggleWishlist('table_billiard', 'Більярд Профі', 32000)" class="btn-secondary" style="padding: 8px; font-size: 0.9rem;">❤️ Зберегти в обране</button>
                     </div>
                 </div>
 
