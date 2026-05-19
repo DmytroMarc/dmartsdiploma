@@ -1,4 +1,4 @@
-// === МИТТЄВИЙ АНТИ-ФЛІКЕР КНОПОК ===
+//МИТТЄВИЙ АНТИ-ФЛІКЕР КНОПОК 
 if (localStorage.getItem('isAuth') === 'true') {
     document.documentElement.classList.add('is-logged-in');
 } else {
@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () => {
     initDynamicItem(); 
 });
 
-// Слухач для синхронізації кошика між різними вкладками браузера (Кіллер-фіча)
 window.addEventListener('storage', (e) => {
     if (e.key === 'cart') {
         updateCartCounter();
@@ -35,9 +34,8 @@ window.addEventListener('storage', (e) => {
     }
 });
 
-// =========================================
 // 1. ТЕМНА ТЕМА (Dark Mode)
-// =========================================
+
 function initThemeToggle() {
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'theme-toggle';
@@ -69,9 +67,8 @@ function initThemeToggle() {
     });
 }
 
-// =========================================
 // 2. РОЗУМНА НАВІГАЦІЯ (Smart Nav)
-// =========================================
+
 function initSmartNav() {
     let currentPath = window.location.pathname.toLowerCase();
     if (currentPath === '' || currentPath === '/') currentPath = 'index.html';
@@ -81,7 +78,6 @@ function initSmartNav() {
         link.removeAttribute('style');
         const linkHref = link.getAttribute('href');
         
-        // Фікс для Firebase: перевіряємо і з .html, і без нього
         const baseHref = linkHref.replace('.html', '');
         if ((currentPath.includes(linkHref) || currentPath.includes(baseHref)) && !link.classList.contains('btn-login') && baseHref !== '') {
             link.classList.add('active-link');
@@ -89,9 +85,8 @@ function initSmartNav() {
     });
 }
 
-// =========================================
 // 3. ПОКАЗАТИ/ПРИХОВАТИ ПАРОЛЬ
-// =========================================
+
 function initPasswordToggles() {
     const passInputs = document.querySelectorAll('input[type="password"]');
     const iconEyeOpen = `<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24" fill="currentColor"><path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/></svg>`;
@@ -120,16 +115,15 @@ function initPasswordToggles() {
     });
 }
 
-// =========================================
 // 4. СИСТЕМА КОШИКА (+/- та Local Storage)
-// =========================================
+
 function initCartSystem() {
     updateCartCounter();
 
     const addToCartBtn = document.querySelector('.item-details .btn-primary');
-    // Фікс Firebase URL: замість 'item.html' просто 'item'
+    
     if (addToCartBtn && window.location.pathname.includes('item')) {
-        // Уникаємо подвійного навішування лісенерів
+
         addToCartBtn.replaceWith(addToCartBtn.cloneNode(true));
         const newAddToCartBtn = document.querySelector('.item-details .btn-primary');
         
@@ -168,7 +162,6 @@ function initCartSystem() {
         });
     }
 
-    // Фікс Firebase URL: замість 'cart.html' просто 'cart'
     if (window.location.pathname.includes('cart')) {
         renderCartPage();
     }
@@ -181,7 +174,7 @@ function updateCartCounter() {
     const navLinks = document.querySelectorAll('header nav a');
     navLinks.forEach(link => {
         if (link.innerHTML.includes('Кошик')) {
-            // Якщо 0 товарів - просто "Кошик", якщо більше - "Кошик (2)"
+
             link.innerHTML = totalItems > 0 ? `🛒 Кошик (${totalItems})` : `🛒 Кошик`;
         }
     });
@@ -267,9 +260,8 @@ window.clearCart = function() {
     window.showToast('Кошик очищено');
 };
 
-// =========================================
 // 5. ФІЛЬТРИ В КАТАЛОЗІ (Живий пошук)
-// =========================================
+
 function initCatalogFilters() {
     const catalogGrid = document.getElementById('catalog-grid');
     if (!catalogGrid) return; 
@@ -317,11 +309,9 @@ function initCatalogFilters() {
     });
 }
 
-// =========================================
 // 6. ІНШІ СТАРІ ФУНКЦІЇ ТА TOASTS
-// =========================================
+
 function initForms() {
-    // Видаляємо 'profileForm' звідси, щоб не було конфлікту з Firebase
     const forms = []; 
     forms.forEach(formId => {
         const form = document.getElementById(formId);
@@ -361,7 +351,6 @@ function simulate3DLoading() {
     }, 1500);
 }
 
-// ПЕРЕРОБЛЕНА ФУНКЦІЯ СПОВІЩЕНЬ: Без спаму і з правильними зникненнями
 window.showToast = function(message) { 
     let container = document.getElementById('toast-container');
     if (!container) {
@@ -370,7 +359,6 @@ window.showToast = function(message) {
         document.body.appendChild(container);
     }
 
-    // Захист від "спаму": якщо більше 3 повідомлень, видаляємо найстаріше
     if (container.children.length >= 3) {
         container.firstChild.classList.remove('show');
         setTimeout(() => {
@@ -383,7 +371,6 @@ window.showToast = function(message) {
     toast.textContent = message;
     container.appendChild(toast);
     
-    // Примусовий рендер для плавного виїзду
     void toast.offsetWidth;
     toast.classList.add('show');
     
@@ -393,9 +380,7 @@ window.showToast = function(message) {
     }, 3000);
 }
 
-// НОВА ФУНКЦІЯ ПОВНОГО ЕКРАНУ
 window.openFullscreen = function() {
-    // Шукаємо весь контейнер, а не тільки плеєр
     const container = document.getElementById('model-container');
     if (!container) return;
 
@@ -403,13 +388,12 @@ window.openFullscreen = function() {
         // Розгортаємо
         if (container.requestFullscreen) {
             container.requestFullscreen();
-        } else if (container.webkitRequestFullscreen) { /* Для Safari */
+        } else if (container.webkitRequestFullscreen) { 
             container.webkitRequestFullscreen();
-        } else if (container.msRequestFullscreen) { /* Для старих браузерів */
+        } else if (container.msRequestFullscreen) { 
             container.msRequestFullscreen();
         }
     } else {
-        // Згортаємо, якщо вже на повному екрані
         if (document.exitFullscreen) {
             document.exitFullscreen();
         }
@@ -419,7 +403,6 @@ window.openFullscreen = function() {
 window.switchTab = function(event, tabName) {
     if (event) event.preventDefault();
     
-    // Отримуємо всі 4 блоки
     const blocks = {
         'settings': document.getElementById('profileSettings'),
         'security': document.getElementById('profileSecurity'),
@@ -427,16 +410,14 @@ window.switchTab = function(event, tabName) {
         'wishlist': document.getElementById('profileWishlist')
     };
     
-    // Ховаємо всі блоки
     Object.values(blocks).forEach(block => {
         if (block) block.style.display = 'none';
     });
     
-    // Забираємо клас active з усіх кнопок
     const links = document.querySelectorAll('.profile-nav a:not(.danger)');
     links.forEach(link => link.classList.remove('active'));
 
-    // Показуємо потрібний блок і підсвічуємо кнопку
+
     if (blocks[tabName]) {
         blocks[tabName].style.display = 'block';
         if (event && event.currentTarget) {
@@ -445,9 +426,9 @@ window.switchTab = function(event, tabName) {
     }
 }
 
-// =========================================
+
 // 7. МОБІЛЬНЕ БУРГЕР-МЕНЮ
-// =========================================
+
 function initMobileMenu() {
     const mobileBtn = document.getElementById('mobileMenuBtn');
     const nav = document.getElementById('mainNav');
@@ -464,9 +445,9 @@ function initMobileMenu() {
     }
 }
 
-// =========================================
+
 // 8. ДИНАМІЧНИЙ CHECKOUT (Оформлення)
-// =========================================
+
 function renderCheckoutPage() {
     const checkoutSidebar = document.querySelector('.checkout-sidebar');
     // Фікс Firebase URL: замість 'checkout.html' просто 'checkout'
@@ -512,54 +493,67 @@ function renderCheckoutPage() {
     checkoutSidebar.innerHTML = orderHtml;
 }
 
-// =========================================
-// 9. ДИНАМІЧНА СТОРІНКА ТОВАРУ (Міні-база)
-// =========================================
+// 9. ДИНАМІЧНА СТОРІНКА ТОВАРУ (Міні-база з брендами)
+
 function initDynamicItem() {
     if (!window.location.pathname.includes('item')) return;
 
     const productsDB = {
        'soft-loft-set': {
             name: 'Софт-Лофт Комплект',
-            price: 45000,
+            price: 20000,
+            brand: 'IKEA x Wayfair',
             modelPath: 'models/sofa_set_01.glb',
             description: 'Ексклюзивний набір меблів у стилі лофт: великий кутовий диван, крісло та дизайнерський столик. Ідеальне рішення для просторої вітальні.'
         },
         'bed_next': {
             name: 'Ліжко "Некст"',
-            price: 18500,
+            price: 10000,
+            brand: 'JYSK',
             modelPath: 'models/bed.glb',
             description: 'Сучасне та мінімалістичне ліжко, яке ідеально впишеться у будь-який інтер\'єр. Високоякісна тканина та ергономічна спинка гарантують максимальний комфорт після важкого дня.'
         },
         'bed_mc': {
             name: 'Ліжко "Майнкрафт"',
-            price: 6400,
+            price: 6000,
+            brand: 'Muji',
             modelPath: 'models/bed_minecraft.glb',
             description: 'Легендарне квадратне ліжко прямісінько з кубічного світу! Забезпечує 100% захист від фантомів, якщо поспати на ньому вночі. Ідеальний вибір для справжніх геймерів (але трохи жорсткуватий).'
         },
         'chair_lounge': {
             name: 'Крісло "Релакс"',
-            price: 8200,
+            price: 5000,
+            brand: 'BoConcept',
             modelPath: 'models/lounge_chair.glb',
             description: 'Неймовірно м\'яке лаунж-крісло для вашої зони відпочинку. Плавні лінії, глибока посадка та приємна на дотик текстура роблять його ідеальним місцем для читання книг чи ранкової кави.'
         },
         'chair_gaming': {
             name: 'Крісло "Кібер"',
-            price: 11500,
+            price: 5500,
+            brand: 'Herman Miller',
             modelPath: 'models/gaming_chair.glb',
             description: 'Професійне геймерське крісло з підтримкою попереку та шиї. Регульована спинка дозволить вам проводити за комп\'ютером години без найменшої втоми.'
         },
         'table_folding': {
             name: 'Стіл "Орігамі"',
             price: 5400,
+            brand: 'West Elm',
             modelPath: 'models/folding_table.glb',
             description: 'Практичний розкладний стіл у сучасному стилі. Компактний у складеному вигляді, він легко перетворюється на повноцінне робоче або обіднє місце, заощаджуючи простір у кімнаті.'
         },
         'table_billiard': {
             name: 'Більярд "Профі"',
-            price: 32000,
+            price: 20000,
+            brand: 'Ashley Furniture',
             modelPath: 'models/billiard-table.glb',
             description: 'Елітний більярдний стіл класичного дизайну. Сукно преміум-якості та масивні ніжки створять атмосферу справжнього джентльменського клубу у вашому домі.'
+        },
+        'tron_yanukovich': {
+            name: 'Трон Януковича 👑',
+            price: 12000000,
+            brand: 'Astanavites',
+            modelPath: 'models/golden_toilet.glb',
+            description: 'Легендарний золотий унітаз із Межигір\'я. Символ абсолютного несмаку, неземної розкоші та епохи "Астанавітєсь!". Має вбудовану систему автоматичного підрахунку золотих батонів, підігрів чистим популізмом та захист від правосуддя. УВАГА: Ростовська прописка та страуси в комплект не входять!'
         }
     };
 
@@ -569,13 +563,17 @@ function initDynamicItem() {
     if (id && productsDB[id]) {
         const product = productsDB[id];
         
-        // Заповнюємо текстові дані (ТУТ БУЛА ПОМИЛКА: desc -> description)
         document.querySelector('.item-details h1').innerText = product.name;
         document.querySelector('.item-details .price').innerText = product.price.toLocaleString() + ' ₴';
         document.querySelector('.item-details p').innerText = product.description; 
-        document.querySelector('.breadcrumbs').innerHTML = `<a href="index.html">Головна</a> / <a href="catalog.html">Каталог</a> / ${product.name}`;
+        
+        const brandElement = document.querySelector('.item-details .product-brand');
+        if (brandElement) {
+            brandElement.innerText = `Бренд: ${product.brand}`;
+        }
 
-        // МАГІЯ WEBGL: Шукаємо місце для картинки і вставляємо туди 3D-модель
+        document.querySelector('.breadcrumbs').innerHTML = `<a href="/">Головна</a> / <a href="/catalog">Каталог</a> / ${product.name}`;
+
         const imagePlaceholder = document.querySelector('.product-image-placeholder') || document.querySelector('.viewer-wrapper');
         
         if (imagePlaceholder && product.modelPath) {
@@ -588,13 +586,27 @@ function initDynamicItem() {
             imagePlaceholder.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)';
             
             imagePlaceholder.innerHTML = `
+                <style>
+                    #model-container .model-hints { 
+                        display: none !important; 
+                    }
+                    #model-container:fullscreen .model-hints { 
+                        display: block !important; 
+                    }
+                    #model-container:-webkit-full-screen .model-hints { 
+                        display: block !important; 
+                    }
+                </style>
+
                 <model-viewer 
                     id="fullscreen-viewer"
                     src="${product.modelPath}" 
                     alt="${product.name}" 
                     auto-rotate 
                     camera-controls 
-                    bounds="tight" 
+                    bounds="tight"
+                    max-camera-orbit="auto auto 300%"
+                    camera-orbit="0deg 75deg 140%" 
                     shadow-intensity="1.2" 
                     exposure="1"
                     style="width: 100%; height: 100%; min-height: 600px; background-color: transparent; outline: none; border: none;">
