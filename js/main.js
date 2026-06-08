@@ -68,19 +68,42 @@ function initThemeToggle() {
 }
 
 // 2. РОЗУМНА НАВІГАЦІЯ (Smart Nav)
-
 function initSmartNav() {
-    let currentPath = window.location.pathname.toLowerCase();
-    if (currentPath === '' || currentPath === '/') currentPath = 'index.html';
-
+    // Отримуємо поточний шлях, одразу прибираємо .html та зайві скісні риски для точності
+    let currentPath = window.location.pathname.toLowerCase().replace('.html', '');
+    if (currentPath.length > 1 && currentPath.endsWith('/')) {
+        currentPath = currentPath.slice(0, -1);
+    }
+    
+    // Шукаємо всі посилання саме у верхньому меню
     const navLinks = document.querySelectorAll('header nav a');
+    
     navLinks.forEach(link => {
-        link.removeAttribute('style');
-        const linkHref = link.getAttribute('href');
+        link.classList.remove('active-link'); 
         
-        const baseHref = linkHref.replace('.html', '');
-        if ((currentPath.includes(linkHref) || currentPath.includes(baseHref)) && !link.classList.contains('btn-login') && baseHref !== '') {
-            link.classList.add('active-link');
+        // Пропускаємо кнопку логіну та логотип (їм підсвітка не потрібна)
+        if (link.classList.contains('btn-login') || link.classList.contains('logo')) return;
+        
+        const linkHref = link.getAttribute('href');
+        if (!linkHref) return;
+        
+        // Зчитуємо шлях самої кнопки (браузер сам перетворить відносні шляхи на абсолютні)
+        let linkPath = new URL(link.href).pathname.toLowerCase().replace('.html', '');
+        if (linkPath.length > 1 && linkPath.endsWith('/')) {
+            linkPath = linkPath.slice(0, -1);
+        }
+        
+        // Перевіряємо збіги
+        if (linkPath === '/' || linkPath === '/index') {
+            // Окрема логіка для Головної сторінки
+            if (currentPath === '/' || currentPath === '/index') {
+                link.classList.add('active-link');
+            }
+        } else {
+            // Логіка для Каталогу, Брендів, Кошика тощо
+            if (currentPath === linkPath) {
+                link.classList.add('active-link');
+            }
         }
     });
 }
@@ -260,8 +283,7 @@ window.clearCart = function() {
     window.showToast('Кошик очищено');
 };
 
-// 5. ФІЛЬТРИ В КАТАЛОЗІ (Живий пошук)
-
+// 5. ФІЛЬТРИ В КАТАЛОЗІ (Живий пошук без чекбоксу "Всі меблі")
 function initCatalogFilters() {
     const catalogGrid = document.getElementById('catalog-grid');
     if (!catalogGrid) return; 
@@ -269,37 +291,30 @@ function initCatalogFilters() {
     const filterCheckboxes = document.querySelectorAll('.cat-filter');
     const products = document.querySelectorAll('.product-card');
     const noResultsMsg = document.getElementById('no-results-msg');
-    const filterAll = document.querySelector('.cat-filter[value="all"]');
 
     filterCheckboxes.forEach(box => {
-        box.addEventListener('change', (e) => {
-            if (e.target.value === 'all' && e.target.checked) {
-                filterCheckboxes.forEach(cb => { if(cb !== e.target) cb.checked = false; });
-            } else if (e.target.checked && filterAll) {
-                filterAll.checked = false;
-            }
-
+        box.addEventListener('change', () => {
+            
+            // Отримуємо масив значень тільки відмічених чекбоксів
             const activeCategories = Array.from(filterCheckboxes)
-                                          .filter(cb => cb.checked && cb.value !== 'all')
+                                          .filter(cb => cb.checked)
                                           .map(cb => cb.value);
 
             let visibleCount = 0;
 
             products.forEach(card => {
                 const cardCat = card.getAttribute('data-category');
-                if (activeCategories.length === 0 || (filterAll && filterAll.checked)) {
+                
+                // Якщо не вибрано ЖОДНОГО чекбоксу АБО категорія товару є серед вибраних
+                if (activeCategories.length === 0 || activeCategories.includes(cardCat)) {
                     card.style.display = 'block';
                     visibleCount++;
                 } else {
-                    if (activeCategories.includes(cardCat)) {
-                        card.style.display = 'block';
-                        visibleCount++;
-                    } else {
-                        card.style.display = 'none';
-                    }
+                    card.style.display = 'none';
                 }
             });
 
+            // Відображення повідомлення "не знайдено"
             if (visibleCount === 0) {
                 noResultsMsg.style.display = 'block';
             } else {
